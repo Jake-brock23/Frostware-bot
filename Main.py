@@ -29,9 +29,8 @@ if not BOT_TOKEN:
     logger.error("BOT_TOKEN environment variable is required!")
     exit(1)
 
-# Bot setup
+# Bot setup - Fixed for discord.py 1.7.3
 intents = discord.Intents.default()
-intents.message_content = True
 bot = commands.Bot(command_prefix='&', intents=intents)
 
 # Permission management
@@ -312,6 +311,147 @@ async def help(ctx, command_name=None):
             embed = discord.Embed(
                 title="❌ Command Not Found",
                 description=f"No command named '{command_name}' found",
+                color=0xe74c3c
+            )
+    else:
+        # Show general help
+        embed = discord.Embed(
+            title="🤖 Frostware Utility Bot",
+            description="Advanced Discord utility bot with role-based permissions",
+            color=0x3498db
+        )
+        
+        admin_commands = [
+            "`&dm <user> <message>` - Send direct message to user",
+            "`&whitelist <user> <duration> <plan>` - Grant Essential/Prime access",
+            "`&permit <user> <duration>` - Grant bot usage permission",
+            "`&unpermit <user>` - Revoke bot usage permission"
+        ]
+        
+        general_commands = [
+            "`&ping` - Check bot latency",
+            "`&help [command]` - Show this help message"
+        ]
+        
+        embed.add_field(
+            name="👑 Admin Commands",
+            value="\n".join(admin_commands),
+            inline=False
+        )
+        
+        embed.add_field(
+            name="🔧 General Commands", 
+            value="\n".join(general_commands),
+            inline=False
+        )
+        
+        embed.add_field(
+            name="⏰ Duration Format",
+            value="`5m` (5 minutes), `2h` (2 hours), `1d` (1 day), `inf` (infinite)",
+            inline=False
+        )
+    
+    embed.set_footer(text="Duration examples: 5m (5 minutes), 2h (2 hours), 1d (1 day), inf (infinite)")
+    
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def ping(ctx):
+    """Check bot latency"""
+    if not is_permitted(ctx.author):
+        await unauthorized_message(ctx)
+        return
+    
+    embed = discord.Embed(
+        title="🏓 Pong!",
+        color=0x3498db
+    )
+    embed.add_field(name="Latency", value=f"{round(bot.latency * 1000)}ms", inline=True)
+    
+    await ctx.send(embed=embed)
+
+def update_bot_status():
+    """Update bot status in shared data"""
+    try:
+        status_data = {
+            'online': bot.is_ready() if bot else False,
+            'guilds': len(bot.guilds) if bot and bot.is_ready() else 1,
+            'permitted_users': len(permitted_users),
+            'latency': round(bot.latency * 1000) if bot and bot.is_ready() else 0
+        }
+        with open('bot_status.json', 'w') as f:
+            json.dump(status_data, f)
+    except Exception as e:
+        logger.error(f"Error updating bot status: {e}")
+
+def status_updater():
+    """Background thread to update bot status periodically"""
+    while True:
+        time.sleep(30)  # Update every 30 seconds
+        update_bot_status()
+
+# Flask Web App
+app = Flask(__name__)
+
+def get_bot_status():
+    """Get bot status from shared data file"""
+    try:
+        if os.path.exists('bot_status.json'):
+            with open('bot_status.json', 'r') as f:
+                return json.load(f)
+    except:
+        pass
+    
+    # Default status if file doesn't exist or can't be read
+    return {
+        'online': False,
+        'guilds': 0,
+        'permitted_users': 0,
+        'latency': 0
+    }
+
+@app.route('/')
+def home():
+    """Main website page"""
+    bot_status = get_bot_status()
+    return render_template('index.html', bot_status=bot_status)
+
+@app.route('/api/status')
+def api_status():
+    """API endpoint for real-time status updates"""
+    return jsonify(get_bot_status())
+
+@app.route('/health')
+def health():
+    """Health check endpoint for uptime monitoring"""
+    bot_status = get_bot_status()
+    return jsonify({
+        "status": "alive" if bot_status['online'] else "offline", 
+        "service": "frostware-utility-bot"
+    })
+
+def run_web_server():
+    """Run the Flask web server"""
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
+
+def start_web_app():
+    """Start the web app in a separate thread"""
+    web_thread = Thread(target=run_web_server, daemon=True)
+    web_thread.start()
+    logger.info("✅ Web server started")
+
+if __name__ == "__main__":
+    # Start web server
+    start_web_app()
+    
+    # Start periodic status updates in background thread
+    status_thread = Thread(target=status_updater, daemon=True)
+    status_thread.start()
+    
+    # Run the Discord bot
+    logger.info("Starting Frostware Utility Bot...")
+    bot.run(BOT_TOKEN)iption=f"No command named '{command_name}' found",
                 color=0xe74c3c
             )
     else:
