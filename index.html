@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frostware Utility Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    
+    <header class="hero">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-snowflake"></i>
+                <span>Frostware</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#status" class="nav-link">Status</a>
+                <a href="#commands" class="nav-link">Commands</a>
+            </div>
+        </nav>
+        
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Frostware</span>
+                    <span class="pulse-text">Utility Bot</span>
+                </h1>
+                <p class="hero-subtitle">Advanced Discord moderation and utility bot with premium features</p>
+                <div class="status-indicator">
+                    <div class="status-dot {{ 'online' if bot_status.online else 'offline' }}"></div>
+                    <span class="status-text">{{ 'Online' if bot_status.online else 'Offline' }}</span>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="bot-avatar">
+                    <div class="avatar-ring"></div>
+                    <div class="avatar-glow"></div>
+                    <i class="fas fa-robot"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="status" class="status-section">
+        <div class="container">
+            <h2 class="section-title">Live Bot Status</h2>
+            <div class="status-grid">
+                <div class="status-card">
+                    <div class="card-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Servers</h3>
+                        <p class="metric">{{ bot_status.guilds }}</p>
+                    </div>
+                </div>
+                
+                <div class="status-card">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Permitted Users</h3>
+                        <p class="metric">{{ bot_status.permitted_users }}</p>
+                    </div>
+                </div>
+                
+                <div class="status-card">
+                    <div class="card-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Latency</h3>
+                        <p class="metric">{{ bot_status.latency }}ms</p>
+                    </div>
+                </div>
+                
+                <div class="status-card">
+                    <div class="card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Uptime</h3>
+                        <p class="metric">24/7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2 class="section-title">Premium Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Direct Messaging</h3>
+                    <p>Send private messages to users with advanced delivery confirmation</p>
+                    <div class="feature-badge">Essential</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>User Whitelisting</h3>
+                    <p>Grant temporary or permanent access with Essential and Prime plans</p>
+                    <div class="feature-badge">Prime</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3>Permission System</h3>
+                    <p>Advanced permission management with timed access control</p>
+                    <div class="feature-badge">Admin</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Analytics</h3>
+                    <p>Real-time bot statistics and usage monitoring</p>
+                    <div class="feature-badge">Pro</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Lightning Fast</h3>
+                    <p>Optimized performance with low latency responses</p>
+                    <div class="feature-badge">Core</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Secure & Reliable</h3>
+                    <p>Enterprise-grade security with 99.9% uptime guarantee</p>
+                    <div class="feature-badge">Premium</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="commands" class="commands-section">
+        <div class="container">
+            <h2 class="section-title">Available Commands</h2>
+            <div class="commands-grid">
+                <div class="command-card">
+                    <div class="command-header">
+                        <code>&ping</code>
+                        <span class="command-type">Utility</span>
+                    </div>
+                    <p>Check bot latency and response time</p>
+                </div>
+                
+                <div class="command-card">
+                    <div class="command-header">
+                        <code>&dm &lt;user&gt; &lt;message&gt;</code>
+                        <span class="command-type">Admin</span>
+                    </div>
+                    <p>Send a direct message to any user</p>
+                </div>
+                
+                <div class="command-card">
+                    <div class="command-header">
+                        <code>&whitelist &lt;user&gt; &lt;duration&gt; &lt;plan&gt;</code>
+                        <span class="command-type">Admin</span>
+                    </div>
+                    <p>Grant user access with Essential or Prime plan</p>
+                </div>
+                
+                <div class="command-card">
+                    <div class="command-header">
+                        <code>&permit &lt;user&gt; &lt;duration&gt;</code>
+                        <span class="command-type">Admin</span>
+                    </div>
+                    <p>Grant permission to use bot commands</p>
+                </div>
+                
+                <div class="command-card">
+                    <div class="command-header">
+                        <code>&unpermit &lt;user&gt;</code>
+                        <span class="command-type">Admin</span>
+                    </div>
+                    <p>Revoke user permissions and access</p>
+                </div>
+                
+                <div class="command-card">
+                    <div class="command-header">
+                        <code>&help</code>
+                        <span class="command-type">General</span>
+                    </div>
+                    <p>Display comprehensive help information</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-snowflake"></i>
+                    <span>Frostware Utility Bot</span>
+                </div>
+                <div class="footer-text">
+                    <p>Powered by advanced Discord.py technology</p>
+                    <p class="copyright">&copy; 2025 Frostware. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
